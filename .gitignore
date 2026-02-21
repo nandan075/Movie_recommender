@@ -1,0 +1,15 @@
+# Ignore ML model files (too large for GitHub)
+movies.pkl
+similarity.pkl
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment (if you create one later)
+venv/
+env/
+
+# System files
+.DS_Store
+Thumbs.db
