@@ -1,65 +1,71 @@
 from flask import Flask, render_template, request
 import pickle
+import pandas as pd
 import os
 import gdown
 
 app = Flask(__name__)
 
-# ==============================
-# DOWNLOAD MODEL FILES IF MISSING
-# ==============================
+
+# ================================
+# DOWNLOAD MODEL FILES FROM DRIVE
+# ================================
 
 def download_file(file_id, output):
-    url = f"https://drive.google.com/uc?id={file_id}"
-    gdown.download(url, output, quiet=False)
+    if not os.path.exists(output):
+        print(f"Downloading {output}...")
+        url = f"https://drive.google.com/uc?export=download&id={file_id}"
+        gdown.download(url, output, quiet=False, fuzzy=True)
 
-# movies.pkl
-if not os.path.exists("movies.pkl"):
-    print("Downloading movies.pkl...")
-    download_file("1KhkqkBlyQ92v_sPmlvLpMhW1LFUPAKxl", "movies.pkl")
 
-# similarity.pkl
-if not os.path.exists("similarity.pkl"):
-    print("Downloading similarity.pkl...")
-    download_file("1pmLzHguIK7GcuFIT0b1jM_NXdf_LiYwN", "similarity.pkl")
+# Your Google Drive file IDs
+MOVIES_FILE_ID = "1KhkqkBlyQ92v_sPmlvLpMhW1LFUPAKxl"
+SIMILARITY_FILE_ID = "1pmLzHguIK7GcuFIT0b1jM_NXdf_LiYwN"
 
-# ==============================
-# LOAD DATA
-# ==============================
+
+# Download if not present
+download_file(MOVIES_FILE_ID, "movies.pkl")
+download_file(SIMILARITY_FILE_ID, "similarity.pkl")
+
+
+# ================================
+# LOAD MODEL FILES
+# ================================
 
 movies = pickle.load(open("movies.pkl", "rb"))
 similarity = pickle.load(open("similarity.pkl", "rb"))
 
-movie_list = movies["title"].values
 
-
-# ==============================
-# RECOMMEND FUNCTION
-# ==============================
+# ================================
+# RECOMMENDATION FUNCTION
+# ================================
 
 def recommend(movie):
-    index = movies[movies["title"] == movie].index[0]
-    distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
-    recommended = []
+    movie_index = movies[movies['title'] == movie].index[0]
+    distances = similarity[movie_index]
+    movies_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
 
-    for i in distances[1:6]:
-        recommended.append(movies.iloc[i[0]].title)
+    recommended_movies = []
+    for i in movies_list:
+        recommended_movies.append(movies.iloc[i[0]].title)
 
-    return recommended
+    return recommended_movies
 
 
-# ==============================
+# ================================
 # ROUTES
-# ==============================
+# ================================
 
 @app.route("/", methods=["GET", "POST"])
-def home():
+def index():
     selected_movie = None
     recommendations = []
 
     if request.method == "POST":
         selected_movie = request.form.get("movie")
         recommendations = recommend(selected_movie)
+
+    movie_list = movies["title"].values
 
     return render_template(
         "index.html",
@@ -69,9 +75,9 @@ def home():
     )
 
 
-# ==============================
-# RUN
-# ==============================
+# ================================
+# RUN APP (LOCAL ONLY)
+# ================================
 
 if __name__ == "__main__":
     app.run(debug=True)
