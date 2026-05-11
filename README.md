@@ -4,7 +4,7 @@ A Machine Learning Movie Recommendation System built with Flask and deployed as 
 
 ## Overview
 
-This project implements a movie recommendation engine that uses machine learning algorithms to suggest movies to users based on their preferences and viewing history. The application is built with Flask for the backend and features a responsive web interface.
+This project implements a movie recommendation engine that uses machine learning algorithms to suggest movies to users based on their preferences and viewing history. The application is built with Flask and is deployed for easy access.
 
 ## Features
 
@@ -17,7 +17,11 @@ This project implements a movie recommendation engine that uses machine learning
 
 - **Backend**: Python, Flask
 - **Frontend**: HTML
-- **Deployment**: Procfile for cloud platform deployment
+- **Deployment**: Render
+
+## Live Application
+
+🎬 **Visit the deployed application**: [Movie Recommender on Render](https://movie-recommender-1-i29d.onrender.com)
 
 ## Project Structure
 
@@ -58,12 +62,13 @@ The application will start locally, typically at `http://localhost:5000`
 
 ## Deployment
 
-The application is configured for cloud deployment using the included `Procfile`. Deploy to Heroku or similar platforms:
+The application is deployed on Render and can be accessed at: https://movie-recommender-1-i29d.onrender.com
 
-```bash
-heroku create your-app-name
-git push heroku main
-```
+To deploy your own instance:
+
+1. Push your code to a GitHub repository
+2. Connect your repository to Render
+3. Configure the deployment settings and deploy
 
 ## Requirements
 
