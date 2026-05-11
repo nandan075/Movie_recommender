@@ -5,6 +5,9 @@ import os
 import sys
 import gdown
 
+# Force stdout to flush immediately so logs appear in Render's log viewer
+sys.stdout.reconfigure(line_buffering=True)
+
 app = Flask(__name__)
 
 # ===============================
