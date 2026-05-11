@@ -39,8 +39,8 @@ def download_file(file_id, output):
 
     print(f"⬇️  Downloading {output} from Google Drive...")
     try:
-        url = f"https://drive.google.com/uc?export=download&id={file_id}"
-        gdown.download(url, output, quiet=False, fuzzy=True)
+        # gdown 6.x API — pass file id directly (no fuzzy kwarg)
+        gdown.download(id=file_id, output=output, quiet=False)
     except Exception as e:
         print(f"❌ gdown failed for {output}: {e}")
 
